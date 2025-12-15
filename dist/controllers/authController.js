@@ -1,2 +1,2 @@
 export {};
-//# sourceMappingURL=AuthController.js.map
+//# sourceMappingURL=authController.js.map

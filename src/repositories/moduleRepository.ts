@@ -1,4 +1,4 @@
-import ModuleModel from '../models/Module.js';
+import ModuleModel from '../models/module.js';
 
 export class ModuleRepository {
   async getAllModules() {

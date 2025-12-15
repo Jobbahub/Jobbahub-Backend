@@ -1,2 +1,2 @@
 export {};
-//# sourceMappingURL=ValidationMiddleware.js.map
+//# sourceMappingURL=validationMiddleware.js.map

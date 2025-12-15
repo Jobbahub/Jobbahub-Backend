@@ -1,2 +1,2 @@
 export {};
-//# sourceMappingURL=FavoriteService.js.map
+//# sourceMappingURL=favoriteService.js.map

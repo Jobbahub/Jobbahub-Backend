@@ -1,1 +1,1 @@
-{"version":3,"file":"RateLimiter.d.ts","sourceRoot":"","sources":["../../src/middleware/RateLimiter.ts"],"names":[],"mappings":""}
+{"version":3,"file":"rateLimiter.d.ts","sourceRoot":"","sources":["../../src/middleware/rateLimiter.ts"],"names":[],"mappings":""}

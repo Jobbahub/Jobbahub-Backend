@@ -1,5 +1,5 @@
 // src/services/ModuleService.ts
-import { ModuleRepository } from '../repositories/ModuleRepository.js';
+import { ModuleRepository } from '../repositories/moduleRepository.js';
 
 export class ModuleService {
   private moduleRepository = new ModuleRepository();

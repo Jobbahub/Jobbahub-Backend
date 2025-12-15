@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
 declare const ModuleModel: mongoose.Model<{
     name: string;
-    description?: string | null;
     shortdescription?: string | null;
+    description?: string | null;
     studycredit?: number | null;
     location?: string | null;
     level?: string | null;
@@ -16,8 +16,8 @@ declare const ModuleModel: mongoose.Model<{
     id: string;
 }, mongoose.Document<unknown, {}, {
     name: string;
-    description?: string | null;
     shortdescription?: string | null;
+    description?: string | null;
     studycredit?: number | null;
     location?: string | null;
     level?: string | null;
@@ -31,8 +31,8 @@ declare const ModuleModel: mongoose.Model<{
     id: string;
 }, mongoose.DefaultSchemaOptions> & Omit<{
     name: string;
-    description?: string | null;
     shortdescription?: string | null;
+    description?: string | null;
     studycredit?: number | null;
     location?: string | null;
     level?: string | null;
@@ -50,8 +50,8 @@ declare const ModuleModel: mongoose.Model<{
     id: string;
 }, mongoose.Schema<any, mongoose.Model<any, any, any, any, any, any, any>, {}, {}, {}, {}, mongoose.DefaultSchemaOptions, {
     name: string;
-    description?: string | null;
     shortdescription?: string | null;
+    description?: string | null;
     studycredit?: number | null;
     location?: string | null;
     level?: string | null;
@@ -63,8 +63,8 @@ declare const ModuleModel: mongoose.Model<{
     start_date?: NativeDate | null;
 }, mongoose.Document<unknown, {}, {
     name: string;
-    description?: string | null;
     shortdescription?: string | null;
+    description?: string | null;
     studycredit?: number | null;
     location?: string | null;
     level?: string | null;
@@ -78,8 +78,8 @@ declare const ModuleModel: mongoose.Model<{
     id: string;
 }, mongoose.ResolveSchemaOptions<mongoose.DefaultSchemaOptions>> & Omit<{
     name: string;
-    description?: string | null;
     shortdescription?: string | null;
+    description?: string | null;
     studycredit?: number | null;
     location?: string | null;
     level?: string | null;
@@ -100,8 +100,8 @@ declare const ModuleModel: mongoose.Model<{
 } | {
     [x: string]: mongoose.SchemaDefinitionProperty<any, any, mongoose.Document<unknown, {}, {
         name: string;
-        description?: string | null;
         shortdescription?: string | null;
+        description?: string | null;
         studycredit?: number | null;
         location?: string | null;
         level?: string | null;
@@ -115,8 +115,8 @@ declare const ModuleModel: mongoose.Model<{
         id: string;
     }, mongoose.ResolveSchemaOptions<mongoose.DefaultSchemaOptions>> & Omit<{
         name: string;
-        description?: string | null;
         shortdescription?: string | null;
+        description?: string | null;
         studycredit?: number | null;
         location?: string | null;
         level?: string | null;
@@ -135,8 +135,8 @@ declare const ModuleModel: mongoose.Model<{
     }> | undefined;
 }, {
     name: string;
-    description?: string | null;
     shortdescription?: string | null;
+    description?: string | null;
     studycredit?: number | null;
     location?: string | null;
     level?: string | null;
@@ -152,8 +152,8 @@ declare const ModuleModel: mongoose.Model<{
     __v: number;
 }>, {
     name: string;
-    description?: string | null;
     shortdescription?: string | null;
+    description?: string | null;
     studycredit?: number | null;
     location?: string | null;
     level?: string | null;
@@ -169,4 +169,4 @@ declare const ModuleModel: mongoose.Model<{
     __v: number;
 }>;
 export default ModuleModel;
-//# sourceMappingURL=Module.d.ts.map
+//# sourceMappingURL=module.d.ts.map

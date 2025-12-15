@@ -1,6 +1,6 @@
 // src/controllers/ModuleController.ts
 import { Request, Response } from 'express';
-import { ModuleService } from '../services/ModuleService.js';
+import { ModuleService } from '../services/moduleService.js';
 
 export class ModuleController {
   private moduleService = new ModuleService();

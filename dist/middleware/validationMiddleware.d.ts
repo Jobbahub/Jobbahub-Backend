@@ -1,2 +1,2 @@
 export {};
-//# sourceMappingURL=ValidationMiddleware.d.ts.map
+//# sourceMappingURL=validationMiddleware.d.ts.map

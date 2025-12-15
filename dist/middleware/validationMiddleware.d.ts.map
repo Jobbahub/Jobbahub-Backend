@@ -1,1 +1,1 @@
-{"version":3,"file":"ValidationMiddleware.d.ts","sourceRoot":"","sources":["../../src/middleware/ValidationMiddleware.ts"],"names":[],"mappings":""}
+{"version":3,"file":"validationMiddleware.d.ts","sourceRoot":"","sources":["../../src/middleware/validationMiddleware.ts"],"names":[],"mappings":""}

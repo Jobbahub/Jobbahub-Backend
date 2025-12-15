@@ -1,6 +1,6 @@
 // src/routes/ModuleRoutes.ts
 import { Router } from 'express';
-import { ModuleController } from '../controllers/ModuleController.js';
+import { ModuleController } from '../controllers/moduleController.js';
 
 const router = Router();
 const moduleController = new ModuleController();

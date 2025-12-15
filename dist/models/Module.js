@@ -10,9 +10,9 @@ const ModuleSchema = new mongoose.Schema({
     Groen: Number,
     Blauw: Number,
     Geel: Number,
-    module_tags: String, // Of Array als het een lijst is
+    module_tags: String,
     start_date: Date,
 });
-const ModuleModel = mongoose.model('Module', ModuleSchema, 'modules');
+const ModuleModel = mongoose.model('Module', ModuleSchema, 'Keuzemodules');
 export default ModuleModel;
-//# sourceMappingURL=Module.js.map
+//# sourceMappingURL=module.js.map

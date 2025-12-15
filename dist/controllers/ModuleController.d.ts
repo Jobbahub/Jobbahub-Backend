@@ -1,2 +1,6 @@
-export {};
-//# sourceMappingURL=ModuleController.d.ts.map
+import { Request, Response } from 'express';
+export declare class ModuleController {
+    private moduleService;
+    getAll(req: Request, res: Response): Promise<void>;
+}
+//# sourceMappingURL=moduleController.d.ts.map

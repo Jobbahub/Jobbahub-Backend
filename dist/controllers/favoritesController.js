@@ -1,2 +1,2 @@
 export {};
-//# sourceMappingURL=FavoritesController.js.map
+//# sourceMappingURL=favoritesController.js.map

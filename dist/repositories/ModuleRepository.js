@@ -1,11 +1,8 @@
-// src/repositories/ModuleRepository.ts
-import mongoose from 'mongoose';
+import ModuleModel from '../models/module.js';
 export class ModuleRepository {
     async getAllModules() {
-        const db = mongoose.connection.db;
-        if (!db)
-            throw new Error('MongoDB connection not initialized');
-        return await db.collection('Keuzemodules').find({}).toArray();
+        // Gebruik het model om alle documenten te vinden
+        return await ModuleModel.find({});
     }
 }
-//# sourceMappingURL=ModuleRepository.js.map
+//# sourceMappingURL=moduleRepository.js.map

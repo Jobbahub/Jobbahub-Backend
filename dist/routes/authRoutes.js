@@ -1,2 +1,2 @@
 export {};
-//# sourceMappingURL=AuthRoutes.js.map
+//# sourceMappingURL=authRoutes.js.map

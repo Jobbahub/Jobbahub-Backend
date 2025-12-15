@@ -1,2 +1,2 @@
 export {};
-//# sourceMappingURL=AiRoutes.js.map
+//# sourceMappingURL=aiRoutes.js.map

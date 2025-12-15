@@ -15,6 +15,6 @@ const ModuleSchema = new mongoose.Schema({
   start_date: Date,
   });
 
-  const ModuleModel = mongoose.model('Module', ModuleSchema, 'modules');
+  const ModuleModel = mongoose.model('Module', ModuleSchema, 'Keuzemodules');
 
   export default ModuleModel;

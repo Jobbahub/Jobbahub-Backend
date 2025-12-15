@@ -1,2 +1,2 @@
 export {};
-//# sourceMappingURL=AiService.d.ts.map
+//# sourceMappingURL=aiService.d.ts.map
