@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 import moduleRoutes from './routes/moduleRoutes.js';
 
 const app = express();
-const port = process.env.PORT;
+const port = process.env.PORT || 3000;
 
 // 1. Database Connectie
 const MONGODB_URI = process.env.MONGODB_URI;
