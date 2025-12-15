@@ -2,9 +2,11 @@
   "name": "jobbahub-backend",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "start": "node dist/server.js",
     "dev": "npm run build && npm run start"
   },
   "repository": {
@@ -14,13 +16,14 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "bugs": {
     "url": "https://github.com/Jobbahub/Jobbahub-Backend/issues"
   },
   "homepage": "https://github.com/Jobbahub/Jobbahub-Backend#readme",
   "dependencies": {
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "mongoose": "^9.0.1"
   },
   "devDependencies": {
     "@types/express": "^5.0.6",
