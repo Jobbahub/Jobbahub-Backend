@@ -1,2 +1,2 @@
 export {};
-//# sourceMappingURL=predictionController.js.map
+//# sourceMappingURL=PredictionController.js.map

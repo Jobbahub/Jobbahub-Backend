@@ -1,2 +1,2 @@
 export {};
-//# sourceMappingURL=rateLimiter.d.ts.map
+//# sourceMappingURL=RateLimiter.d.ts.map

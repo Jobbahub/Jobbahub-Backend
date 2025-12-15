@@ -1,2 +1,2 @@
 export {};
-//# sourceMappingURL=rateLimiter.js.map
+//# sourceMappingURL=RateLimiter.js.map

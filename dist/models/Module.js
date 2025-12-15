@@ -1,0 +1,18 @@
+import mongoose from 'mongoose';
+const ModuleSchema = new mongoose.Schema({
+    name: { type: String, required: true },
+    shortdescription: String,
+    description: String,
+    studycredit: Number,
+    location: String,
+    level: String,
+    Rood: Number,
+    Groen: Number,
+    Blauw: Number,
+    Geel: Number,
+    module_tags: String, // Of Array als het een lijst is
+    start_date: Date,
+});
+const ModuleModel = mongoose.model('Module', ModuleSchema, 'modules');
+export default ModuleModel;
+//# sourceMappingURL=Module.js.map
