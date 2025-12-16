@@ -29,4 +29,53 @@ export class ModuleController {
       res.status(404).json({ message: 'Module niet gevonden' });
     }
   }
+  async getByBatchIds(req: Request, res: Response) {
+  try {
+    // 1. Haal de query-parameter op
+    const idsQuery = req.query.ids as string | undefined;
+
+    if (!idsQuery) {
+      // Dit vangt de URL: /modules/batch
+      return res.status(400).json({ message: 'Lijst van module ID\'s (ids) is vereist als query-parameter.' });
+    }
+
+    // DEBUGGING: Log de ruwe input om te zien wat er binnenkomt
+    // console.log('Ruwe ID\'s string:', idsQuery); 
+    
+    // 2. Splitsen, opschonen en converteren
+    const idsArray = idsQuery
+      .split(',') // Splitten op de komma
+      .map(id => id.trim()) // Spaties verwijderen rondom elke ID
+      .filter(id => id !== ''); // Lege strings verwijderen (ontstaan bij '1,,5' of '1,5,')
+      
+    // 3. Valideren en converteren naar nummers
+    const validIds: number[] = [];
+    for (const id of idsArray) {
+      const numId = Number(id);
+      
+      // Controleer of de conversie slaagt
+      if (!Number.isNaN(numId) && numId > 0) { // Zorg ervoor dat het een geldig nummer is
+        validIds.push(numId);
+      } else {
+        // DEBUGGING: Log de ongeldige ID
+        // console.error('Ongeldige ID gevonden:', id); 
+      }
+    }
+    
+    // 4. Final check: Zijn er geldige ID's over?
+    if (validIds.length === 0) {
+      // Dit vangt URLs als: /modules/batch?ids=a,b,c of /modules/batch?ids=,
+      return res.status(400).json({ message: 'Ongeldige module ID\'s. Zorg voor een komma-gescheiden lijst met geldige nummers.' });
+    }
+
+    // 5. Unieke ID's en Service aanroepen
+    const uniqueValidIds = [...new Set(validIds)];
+    const modules = await this.moduleService.getModulesByIds(uniqueValidIds);
+    
+    res.status(200).json(modules); 
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Er is een interne serverfout opgetreden bij het ophalen van de modules.' });
+  }
+}
 }
