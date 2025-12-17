@@ -1,7 +1,9 @@
 import 'dotenv/config';
 import express from 'express';
 import mongoose from 'mongoose';
+import cors from 'cors'; // Vergeet niet: npm install cors & @types/cors
 import moduleRoutes from './routes/moduleRoutes.js';
+import authRoutes from './routes/authRoutes.js';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -19,6 +21,7 @@ mongoose.connect(MONGODB_URI)
   .catch(err => console.error('❌ Could not connect to MongoDB', err));
 
 // 2. Middleware
+app.use(cors()); // Zorgt dat frontend bij de API kan
 app.use(express.json());
 
 // 3. Routes
@@ -27,6 +30,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/modules', moduleRoutes);
+app.use('/api/auth', authRoutes);
 
 // 4. Start Server
 app.listen(port, () => {
