@@ -12,8 +12,12 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
     try {
         const { naam, wachtwoord } = req.body;
-        const student = await authService.loginStudent(naam, wachtwoord);
-        res.json({ message: "Login succesvol", studentId: student._id });
+        const { student, token } = await authService.loginStudent(naam, wachtwoord);
+        res.json({
+            message: "Login succesvol",
+            token: token, // De frontend slaat dit op
+            studentId: student._id
+        });
     }
     catch (error) {
         res.status(401).json({ error: error.message });

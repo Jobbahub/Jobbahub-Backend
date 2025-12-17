@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import cors from 'cors'; // Vergeet niet: npm install cors & @types/cors
 import moduleRoutes from './routes/moduleRoutes.js';
 import authRoutes from './routes/authRoutes.js';
+import favoriteRoutes from './routes/favoriteRoutes.js';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -31,6 +32,7 @@ app.get('/', (req, res) => {
 
 app.use('/api/modules', moduleRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/favorites', favoriteRoutes);
 
 // 4. Start Server
 app.listen(port, () => {
