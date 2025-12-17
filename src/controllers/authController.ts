@@ -3,11 +3,14 @@ import * as authService from '../services/authService.js';
 
 export const register = async (req: Request, res: Response) => {
   try {
-    const { naam, wachtwoord } = req.body;
-    await authService.registerStudent(naam, wachtwoord);
+    const { naam, email, wachtwoord } = req.body; // email toegevoegd
+    
+    if (!email) return res.status(400).json({ error: "Email is verplicht" });
+
+    await authService.registerStudent(naam, email, wachtwoord);
     res.status(201).json({ message: "Student geregistreerd" });
   } catch (error: any) {
-    res.status(400).json({ error: error.message });
+    res.status(400).json({ error: "Registratie mislukt. Email bestaat al?" });
   }
 };
 

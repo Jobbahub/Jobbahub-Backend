@@ -2,12 +2,13 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import Student, { IStudent } from '../models/Student.js';
 
-export const registerStudent = async (naam: string, wachtwoord: string): Promise<IStudent> => {
+export const registerStudent = async (naam: string, email: string, wachtwoord: string): Promise<IStudent> => {
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(wachtwoord, salt);
 
   const nieuweStudent = new Student({
     naam,
+    email,
     wachtwoord: hashedPassword,
     favorieten: []
   });

@@ -3,12 +3,14 @@ import mongoose, { Schema, Document } from 'mongoose';
 
 export interface IStudent extends Document { // Vergeet 'export' hier niet!
   naam: string;
+  email: string;
   wachtwoord: string;
   favorieten: any[]; 
 }
 
 const StudentSchema: Schema = new Schema({
   naam: { type: String, required: true, unique: true },
+  email: { type: String, required: true, unique: true, lowercase: true },
   wachtwoord: { type: String, required: true },
   favorieten: [{ 
     module_id: { type: String, required: true }, 
