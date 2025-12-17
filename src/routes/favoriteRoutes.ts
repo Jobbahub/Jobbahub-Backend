@@ -1,15 +1,16 @@
 import express from 'express';
-import * as favoritesController from '../controllers/favoritesController.js';
+import * as favoritesController from '../controllers/favoritesController.js'; // Let op .js extensie als je die gebruikt
 import { verifyToken } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
-// Route om toe te voegen: POST /api/favorites/:studentId
-router.post('/:studentId', verifyToken, favoritesController.addFavorite);
+// GET /api/favorites -> Haal favorieten op van ingelogde gebruiker
+router.get('/', verifyToken, favoritesController.getFavorites);
 
-// Route om te verwijderen: DELETE /api/favorites/:studentId
-router.delete('/:studentId', verifyToken, favoritesController.removeFavorite);
+// POST /api/favorites -> Voeg favoriet toe (ID zit in body)
+router.post('/', verifyToken, favoritesController.addFavorite);
 
-router.get('/:studentId', verifyToken, favoritesController.getFavorites);
+// DELETE /api/favorites/:moduleId -> Verwijder favoriet
+router.delete('/:moduleId', verifyToken, favoritesController.removeFavorite);
 
 export default router;

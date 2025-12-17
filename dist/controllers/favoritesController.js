@@ -1,57 +1,56 @@
 import * as favoriteService from '../services/favoriteService.js';
-export const addFavorite = async (req, res) => {
+export const getFavorites = async (req, res) => {
     try {
-        const { studentId } = req.params;
-        const { module_id } = req.body;
-        // Controleer of studentId bestaat
+        const studentId = req.user?.id;
+        // Check: als er geen ID is, stop direct
         if (!studentId) {
-            return res.status(400).json({ error: "Student ID is verplicht in de URL" });
+            return res.status(401).json({ error: 'Niet geautoriseerd' });
         }
-        if (!module_id) {
-            return res.status(400).json({ error: "module_id is verplicht in de body" });
-        }
-        // TypeScript weet nu dat studentId 100% een string is
-        const student = await favoriteService.addModuleToFavorites(studentId, module_id);
-        res.json({
-            message: "Favoriet toegevoegd!",
-            favorieten: student.favorieten
-        });
+        // Nu weet TS zeker dat studentId een string is
+        const favorites = await favoriteService.getFavorites(studentId);
+        res.json(favorites);
     }
     catch (error) {
-        res.status(400).json({ error: error.message });
+        res.status(500).json({ error: error.message });
+    }
+};
+export const addFavorite = async (req, res) => {
+    try {
+        const studentId = req.user?.id;
+        const { module_id } = req.body;
+        // Strenge checks voor BEIDE variabelen
+        if (!studentId) {
+            return res.status(401).json({ error: 'Niet geautoriseerd' });
+        }
+        if (!module_id) {
+            return res.status(400).json({ error: 'Module ID verplicht' });
+        }
+        const updatedStudent = await favoriteService.addFavorite(studentId, module_id);
+        res.json(updatedStudent.favorieten);
+    }
+    catch (error) {
+        console.error("Add favorite error:", error);
+        res.status(500).json({ error: error.message });
     }
 };
 export const removeFavorite = async (req, res) => {
     try {
-        const { studentId } = req.params;
-        const { module_id } = req.body;
-        // VOEG DEZE CHECK TOE:
+        const studentId = req.user?.id;
+        const { moduleId } = req.params;
+        // HIER zat waarschijnlijk je foutmelding:
         if (!studentId) {
-            return res.status(400).json({ error: "Student ID is verplicht in de URL" });
+            return res.status(401).json({ error: 'Niet geautoriseerd' });
         }
-        if (!module_id) {
-            return res.status(400).json({ error: "module_id is verplicht in de body" });
+        if (!moduleId) {
+            return res.status(400).json({ error: 'Module ID ontbreekt' });
         }
-        const student = await favoriteService.removeModuleFromFavorites(studentId, module_id);
-        res.json({
-            message: "Favoriet verwijderd",
-            favorieten: student.favorieten
-        });
+        // Omdat we hierboven 'return' doen als het leeg is, 
+        // weet TypeScript hieronder zeker dat studentId een string is.
+        const updatedStudent = await favoriteService.removeFavorite(studentId, moduleId);
+        res.json(updatedStudent.favorieten);
     }
     catch (error) {
-        res.status(400).json({ error: error.message });
-    }
-};
-export const getFavorites = async (req, res) => {
-    try {
-        const { studentId } = req.params;
-        if (!studentId)
-            return res.status(400).json({ error: "ID nodig" });
-        const favorites = await favoriteService.getStudentWithFavorites(studentId);
-        res.json(favorites);
-    }
-    catch (error) {
-        res.status(404).json({ error: error.message });
+        res.status(500).json({ error: error.message });
     }
 };
 //# sourceMappingURL=favoritesController.js.map
