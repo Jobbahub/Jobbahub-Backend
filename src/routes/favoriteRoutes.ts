@@ -4,8 +4,8 @@ import { verifyToken } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
-// Route om toe te voegen: PATCH /api/favorites/:studentId
-router.patch('/:studentId', verifyToken, favoritesController.addFavorite);
+// Route om toe te voegen: POST /api/favorites/:studentId
+router.post('/:studentId', verifyToken, favoritesController.addFavorite);
 
 // Route om te verwijderen: DELETE /api/favorites/:studentId
 router.delete('/:studentId', verifyToken, favoritesController.removeFavorite);
