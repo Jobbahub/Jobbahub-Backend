@@ -1,11 +1,15 @@
 // src/models/Student.ts
 import mongoose, { Schema, Document } from 'mongoose';
 
-export interface IStudent extends Document { // Vergeet 'export' hier niet!
+export interface IStudent extends Document {
   naam: string;
   email: string;
   wachtwoord: string;
-  favorieten: any[]; 
+  favorieten: any[];
+  vragenlijst_resultaten?: {
+    gekozen_filters: string[]; // Bijv: ["Technologie, Data & Engineering", "Business, Recht & Management"]
+    antwoorden: any;           // De ruwe data van de vragenlijst
+  };
 }
 
 const StudentSchema: Schema = new Schema({
@@ -15,8 +19,12 @@ const StudentSchema: Schema = new Schema({
   favorieten: [{ 
     module_id: { type: String, required: true }, 
     toegevoegd_op: { type: Date, default: Date.now } 
-  }]
+  }],
+  vragenlijst_resultaten: {
+    gekozen_filters: [{ type: String }],
+    antwoorden: { type: Schema.Types.Mixed } 
+  }
 });
 
 const Student = mongoose.model<IStudent>('Student', StudentSchema);
-export default Student; // Zorg dat dit er staat!
+export default Student;

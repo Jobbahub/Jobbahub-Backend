@@ -14,6 +14,7 @@ const ModuleSchema = new mongoose.Schema({
   Geel: Number,
   module_tags: String,
   start_date: Date,
+  main_filter: String,
   });
 
   const ModuleModel = mongoose.model('Module', ModuleSchema, 'Keuzemodules');
