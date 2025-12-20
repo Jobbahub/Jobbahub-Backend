@@ -24,13 +24,35 @@ export const login = async (req, res) => {
             user: {
                 id: student._id,
                 name: student.naam,
-                email: student.email
+                email: student.email,
+                vragenlijst_resultaten: student.vragenlijst_resultaten
             }
         });
     }
     catch (error) {
         console.error("Login fout:", error);
         res.status(401).json({ error: error.message || "Inloggen mislukt" });
+    }
+};
+export const saveQuestionnaire = async (req, res) => {
+    try {
+        const studentId = req.user.id;
+        const data = req.body;
+        const updatedStudent = await authService.saveQuestionnaireResults(studentId, data);
+        res.json(updatedStudent);
+    }
+    catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+export const resetQuestionnaire = async (req, res) => {
+    try {
+        const studentId = req.user.id;
+        await authService.deleteQuestionnaireResults(studentId);
+        res.json({ message: "Vragenlijst gereset" });
+    }
+    catch (error) {
+        res.status(500).json({ error: error.message });
     }
 };
 //# sourceMappingURL=authController.js.map

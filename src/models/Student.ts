@@ -9,6 +9,8 @@ export interface IStudent extends Document {
   vragenlijst_resultaten?: {
     gekozen_filters: string[]; // Bijv: ["Technologie, Data & Engineering", "Business, Recht & Management"]
     antwoorden: any;           // De ruwe data van de vragenlijst
+    aanbevelingen?: any[];
+    cluster_suggesties?: any[];
   };
 }
 
@@ -16,13 +18,24 @@ const StudentSchema: Schema = new Schema({
   naam: { type: String, required: true, unique: true },
   email: { type: String, required: true, unique: true, lowercase: true },
   wachtwoord: { type: String, required: true },
-  favorieten: [{ 
-    module_id: { type: String, required: true }, 
-    toegevoegd_op: { type: Date, default: Date.now } 
+  favorieten: [{
+    module_id: { type: String, required: true },
+    toegevoegd_op: { type: Date, default: Date.now }
   }],
   vragenlijst_resultaten: {
     gekozen_filters: [{ type: String }],
-    antwoorden: { type: Schema.Types.Mixed } 
+    antwoorden: { type: Schema.Types.Mixed },
+    aanbevelingen: [{
+      name: String,
+      match_percentage: Number,
+      waarom: String,
+      studycredit: Number
+    }],
+    cluster_suggesties: [{
+      name: String,
+      popularity_score: Number,
+      waarom: String
+    }]
   }
 });
 

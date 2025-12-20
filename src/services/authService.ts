@@ -20,8 +20,8 @@ export const registerStudent = async (naam: string, email: string, wachtwoord: s
 // Update login functie om te zoeken op email
 export const loginStudent = async (email: string, wachtwoordInvoer: string) => {
   // 1. Zoek op EMAIL in plaats van NAAM
-  const student = await Student.findOne({ email }); 
-  
+  const student = await Student.findOne({ email });
+
   if (!student) {
     throw new Error('Gebruiker niet gevonden met dit e-mailadres');
   }
@@ -40,4 +40,16 @@ export const loginStudent = async (email: string, wachtwoordInvoer: string) => {
   );
 
   return { student, token };
+};
+
+export const saveQuestionnaireResults = async (studentId: string, data: any) => {
+  return await Student.findByIdAndUpdate(studentId, {
+    $set: { vragenlijst_resultaten: data }
+  }, { new: true });
+};
+
+export const deleteQuestionnaireResults = async (studentId: string) => {
+  return await Student.findByIdAndUpdate(studentId, {
+    $unset: { vragenlijst_resultaten: 1 }
+  }, { new: true });
 };

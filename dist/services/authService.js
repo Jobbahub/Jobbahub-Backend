@@ -29,4 +29,14 @@ export const loginStudent = async (email, wachtwoordInvoer) => {
     const token = jwt.sign({ id: student._id, email: student.email }, process.env.JWT_SECRET, { expiresIn: '24h' });
     return { student, token };
 };
+export const saveQuestionnaireResults = async (studentId, data) => {
+    return await Student.findByIdAndUpdate(studentId, {
+        $set: { vragenlijst_resultaten: data }
+    }, { new: true });
+};
+export const deleteQuestionnaireResults = async (studentId) => {
+    return await Student.findByIdAndUpdate(studentId, {
+        $unset: { vragenlijst_resultaten: 1 }
+    }, { new: true });
+};
 //# sourceMappingURL=authService.js.map
