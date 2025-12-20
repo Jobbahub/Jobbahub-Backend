@@ -4,15 +4,16 @@ export declare class ModuleRepository {
         name?: string | null;
         shortdescription?: string | null;
         description?: string | null;
+        content?: string | null;
         studycredit?: number | null;
         location?: string | null;
         level?: string | null;
-        Rood?: number | null;
-        Groen?: number | null;
-        Blauw?: number | null;
-        Geel?: number | null;
-        module_tags?: string | null;
+        learningoutcomes?: string | null;
+        estimated_difficulty?: string | null;
+        available_spots?: number | null;
+        tags_list?: string | null;
         start_date?: NativeDate | null;
+        main_filter?: string | null;
     }, {
         id: string;
     }, import("mongoose").DefaultSchemaOptions> & Omit<{
@@ -20,15 +21,16 @@ export declare class ModuleRepository {
         name?: string | null;
         shortdescription?: string | null;
         description?: string | null;
+        content?: string | null;
         studycredit?: number | null;
         location?: string | null;
         level?: string | null;
-        Rood?: number | null;
-        Groen?: number | null;
-        Blauw?: number | null;
-        Geel?: number | null;
-        module_tags?: string | null;
+        learningoutcomes?: string | null;
+        estimated_difficulty?: string | null;
+        available_spots?: number | null;
+        tags_list?: string | null;
         start_date?: NativeDate | null;
+        main_filter?: string | null;
     } & {
         _id: import("mongoose").Types.ObjectId;
     } & {
@@ -41,15 +43,16 @@ export declare class ModuleRepository {
         name?: string | null;
         shortdescription?: string | null;
         description?: string | null;
+        content?: string | null;
         studycredit?: number | null;
         location?: string | null;
         level?: string | null;
-        Rood?: number | null;
-        Groen?: number | null;
-        Blauw?: number | null;
-        Geel?: number | null;
-        module_tags?: string | null;
+        learningoutcomes?: string | null;
+        estimated_difficulty?: string | null;
+        available_spots?: number | null;
+        tags_list?: string | null;
         start_date?: NativeDate | null;
+        main_filter?: string | null;
     }, {
         id: string;
     }, import("mongoose").DefaultSchemaOptions> & Omit<{
@@ -57,15 +60,16 @@ export declare class ModuleRepository {
         name?: string | null;
         shortdescription?: string | null;
         description?: string | null;
+        content?: string | null;
         studycredit?: number | null;
         location?: string | null;
         level?: string | null;
-        Rood?: number | null;
-        Groen?: number | null;
-        Blauw?: number | null;
-        Geel?: number | null;
-        module_tags?: string | null;
+        learningoutcomes?: string | null;
+        estimated_difficulty?: string | null;
+        available_spots?: number | null;
+        tags_list?: string | null;
         start_date?: NativeDate | null;
+        main_filter?: string | null;
     } & {
         _id: import("mongoose").Types.ObjectId;
     } & {
@@ -78,15 +82,16 @@ export declare class ModuleRepository {
         name?: string | null;
         shortdescription?: string | null;
         description?: string | null;
+        content?: string | null;
         studycredit?: number | null;
         location?: string | null;
         level?: string | null;
-        Rood?: number | null;
-        Groen?: number | null;
-        Blauw?: number | null;
-        Geel?: number | null;
-        module_tags?: string | null;
+        learningoutcomes?: string | null;
+        estimated_difficulty?: string | null;
+        available_spots?: number | null;
+        tags_list?: string | null;
         start_date?: NativeDate | null;
+        main_filter?: string | null;
     }, {
         id: string;
     }, import("mongoose").DefaultSchemaOptions> & Omit<{
@@ -94,15 +99,16 @@ export declare class ModuleRepository {
         name?: string | null;
         shortdescription?: string | null;
         description?: string | null;
+        content?: string | null;
         studycredit?: number | null;
         location?: string | null;
         level?: string | null;
-        Rood?: number | null;
-        Groen?: number | null;
-        Blauw?: number | null;
-        Geel?: number | null;
-        module_tags?: string | null;
+        learningoutcomes?: string | null;
+        estimated_difficulty?: string | null;
+        available_spots?: number | null;
+        tags_list?: string | null;
         start_date?: NativeDate | null;
+        main_filter?: string | null;
     } & {
         _id: import("mongoose").Types.ObjectId;
     } & {
