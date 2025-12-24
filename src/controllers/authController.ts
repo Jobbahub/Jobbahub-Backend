@@ -18,10 +18,10 @@ export const register = async (req: Request, res: Response) => {
 export const login = async (req: Request, res: Response) => {
   try {
     // FIX: De frontend stuurt 'email' en 'password', dus dat lezen we hier uit
-    const { email, password } = req.body;
+    const { email, wachtwoord } = req.body;
 
     // We geven dit door aan de service (die passen we in Stap 2 aan)
-    const { student, token } = await authService.loginStudent(email, password);
+    const { student, token } = await authService.loginStudent(email, wachtwoord);
 
     res.json({
       message: "Login succesvol",
