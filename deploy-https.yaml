@@ -1,0 +1,45 @@
+apiVersion: 2019-12-01
+location: westeurope
+name: jobbahub-ai-container
+properties:
+  containers:
+  - name: jobbahub-ai
+    properties:
+      image: acrjobbahub2025.azurecr.io/jobbahub-ai:v1
+      resources:
+        requests:
+          cpu: 1.0
+          memoryInGB: 1.5
+      ports:
+      - port: 8000
+  - name: caddy-ssl
+    properties:
+      image: acrjobbahub2025.azurecr.io/caddy:alpine
+      command:
+        - caddy
+        - reverse-proxy
+        - --from
+        - jobbahub-ai-2025.westeurope.azurecontainer.io
+        - --to
+        - localhost:8000
+      resources:
+        requests:
+          cpu: 0.5
+          memoryInGB: 0.5
+      ports:
+      - port: 80
+      - port: 443
+  osType: Linux
+  ipAddress:
+    type: Public
+    dnsNameLabel: jobbahub-ai-2025
+    ports:
+    - protocol: TCP
+      port: 80
+    - protocol: TCP
+      port: 443
+  imageRegistryCredentials:
+  - server: acrjobbahub2025.azurecr.io
+    username: acrjobbahub2025
+    password: FvabS5m/PkSwSlwEkoWM9JdG2FCUm5xe2MN/OjmzhF+ACRCePyGn
+type: Microsoft.ContainerInstance/containerGroups
