@@ -16,18 +16,27 @@ const validate = (schema: Joi.ObjectSchema, req: Request, res: Response, next: N
 };
 
 // 1. Schema voor de Vragenlijst
-const surveySchema = Joi.object({
+// 1. Schema voor de Vragenlijst antwoorden (nested object)
+const answersSchema = Joi.object({
     keuze_taal: Joi.string().allow(null),
     keuze_locatie: Joi.string().allow(null),
     keuze_punten: Joi.number().allow(null),
-    open_antwoord: Joi.string().allow(''),
+    open_antwoord: Joi.string().allow('').allow(null),
     knoppen_input: Joi.object().pattern(
-        Joi.string().regex(/^q_/), // Moet beginnen met q_
+        Joi.string().regex(/^q_/),
         Joi.object({
             score: Joi.number().min(0).max(5).required(),
             weight: Joi.number().min(0).required()
         })
     ).required()
+});
+
+// Schema voor de volledige payload (inclusief aanbevelingen etc.)
+const surveySchema = Joi.object({
+    antwoorden: answersSchema.required(),
+    // We valideren aanbevelingen en clusters niet strikt, maar we staan ze wel toe
+    aanbevelingen: Joi.array().items(Joi.object()).optional(),
+    cluster_suggesties: Joi.array().items(Joi.object()).optional()
 });
 
 // 2. Schema voor de Login

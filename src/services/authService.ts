@@ -53,3 +53,7 @@ export const deleteQuestionnaireResults = async (studentId: string) => {
     $unset: { vragenlijst_resultaten: 1 }
   }, { new: true });
 };
+
+export const getStudentById = async (studentId: string) => {
+  return await Student.findById(studentId).select('-wachtwoord');
+};

@@ -9,9 +9,9 @@ export const aiRateLimiter = rateLimit({
     },
     standardHeaders: true, // Retourneer rate limit info in de `RateLimit-*` headers
     legacyHeaders: false, // Schakel de `X-RateLimit-*` headers uit
+    validate: { trustProxy: false }, // suppress warning
     keyGenerator: (req: Request) => {
-        // Gebruik gebruiker ID indien beschikbaar, anders IP
-        // we casten naar any omdat user dynamisch wordt toegevoegd door auth middleware
-        return (req as any).user?.id || req.ip;
+        // Gebruik gebruiker ID indien beschikbaar, anders IP, anders fallback
+        return (req as any).user?.id || req.ip || "unknown";
     }
 });

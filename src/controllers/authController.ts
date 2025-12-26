@@ -59,3 +59,21 @@ export const resetQuestionnaire = async (req: Request, res: Response) => {
     res.status(500).json({ error: error.message });
   }
 }
+
+export const getMe = async (req: Request, res: Response) => {
+  try {
+    const studentId = (req as any).user.id;
+    const student = await authService.getStudentById(studentId);
+    if (!student) {
+      return res.status(404).json({ error: "Gebruiker niet gevonden" });
+    }
+    res.json({
+      id: student._id,
+      name: student.naam,
+      email: student.email,
+      vragenlijst_resultaten: student.vragenlijst_resultaten
+    });
+  } catch (error: any) {
+    res.status(500).json({ error: "Fout bij ophalen gebruikersgegevens" });
+  }
+};
