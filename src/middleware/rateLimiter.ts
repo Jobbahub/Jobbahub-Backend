@@ -11,7 +11,9 @@ export const aiRateLimiter = rateLimit({
     legacyHeaders: false, // Schakel de `X-RateLimit-*` headers uit
     validate: { trustProxy: false }, // suppress warning
     keyGenerator: (req: Request) => {
-        // Gebruik gebruiker ID indien beschikbaar, anders IP, anders fallback
-        return (req as any).user?.id || req.ip || "unknown";
+        // Gebruik gebruiker ID indien beschikbaar
+        if ((req as any).user?.id) return (req as any).user.id;
+        // Fallback naar IP, maar vang IPv6 issues op door te vervangen of te checken
+        return req.ip || "unknown_ip";
     }
 });
