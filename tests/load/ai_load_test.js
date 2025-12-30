@@ -26,9 +26,9 @@ export const options = {
 };
 
 // Use environment variables or defaults
-const BASE_URL = __ENV.BASE_URL || 'http://localhost:3000/api';
-const TEST_EMAIL = __ENV.TEST_EMAIL || 'email123@gmail.com';
-const TEST_PASSWORD = __ENV.TEST_PASSWORD || 'wachtwoord123';
+const BASE_URL = __ENV.BASE_URL;
+const TEST_EMAIL = __ENV.TEST_EMAIL;
+const TEST_PASSWORD = __ENV.TEST_PASSWORD;
 
 export default function () {
     // 1. Authentication
