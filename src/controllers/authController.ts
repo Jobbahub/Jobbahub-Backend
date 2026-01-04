@@ -77,3 +77,45 @@ export const getMe = async (req: Request, res: Response) => {
     res.status(500).json({ error: "Fout bij ophalen gebruikersgegevens" });
   }
 };
+
+// NEW: Change credentials (email, password, username)
+export const changeCredentials = async (req: Request, res: Response) => {
+  try {
+    const studentId = (req as any).user.id;
+    const { currentPassword, newEmail, newPassword, newNaam } = req.body;
+
+    // Verify that at least one field is being updated
+    if (!newEmail && !newPassword && !newNaam) {
+      return res.status(400).json({ 
+        error: "Je moet minstens één veld opgeven om te wijzigen (newEmail, newPassword, of newNaam)" 
+      });
+    }
+
+    // Current password is always required
+    if (!currentPassword) {
+      return res.status(400).json({ 
+        error: "Huidig wachtwoord is verplicht" 
+      });
+    }
+
+    // Call the service to update credentials
+    const updatedStudent = await authService.changeCredentials(
+      studentId,
+      currentPassword,
+      { newEmail, newPassword, newNaam }
+    );
+
+    res.json({
+      message: "Gegevens succesvol gewijzigd",
+      user: {
+        id: updatedStudent._id,
+        name: updatedStudent.naam,
+        email: updatedStudent.email
+      }
+    });
+  } catch (error: any) {
+    // Return 400 for validation/logic errors, 401 for auth errors
+    const statusCode = error.message.includes('onjuist') ? 401 : 400;
+    res.status(statusCode).json({ error: error.message || "Wijziging mislukt" });
+  }
+};

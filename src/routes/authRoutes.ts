@@ -13,4 +13,7 @@ router.get('/me', verifyToken, authController.getMe);
 router.post('/questionnaire', verifyToken, validateSurvey, authController.saveQuestionnaire);
 router.delete('/questionnaire', verifyToken, authController.resetQuestionnaire);
 
+// NEW: Change credentials route
+router.patch('/change-credentials', verifyToken, authController.changeCredentials);
+
 export default router;
