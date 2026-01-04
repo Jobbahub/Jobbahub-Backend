@@ -1,11 +1,11 @@
 import express from 'express';
-import { validateLogin, validateSurvey } from '../middleware/validationMiddleware.js';
+import { validateLogin, validateSurvey, validateRegister, validateChangeCredentials } from '../middleware/validationMiddleware.js';
 import * as authController from '../controllers/authController.js';
 import { verifyToken } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
-router.post('/register', authController.register);
+router.post('/register', validateRegister, authController.register);
 router.post('/login', validateLogin, authController.login);
 
 // Voeg de /me route toe
@@ -14,6 +14,6 @@ router.post('/questionnaire', verifyToken, validateSurvey, authController.saveQu
 router.delete('/questionnaire', verifyToken, authController.resetQuestionnaire);
 
 // NEW: Change credentials route
-router.patch('/change-credentials', verifyToken, authController.changeCredentials);
+router.patch('/change-credentials', verifyToken, validateChangeCredentials, authController.changeCredentials);
 
 export default router;

@@ -29,7 +29,7 @@ const answersSchema = Joi.object({
             weight: Joi.number().min(0).required()
         })
     ).required()
-});
+}).unknown(true);
 
 // Schema voor de volledige payload (inclusief aanbevelingen etc.)
 const surveySchema = Joi.object({
@@ -37,9 +37,24 @@ const surveySchema = Joi.object({
     // We valideren aanbevelingen en clusters niet strikt, maar we staan ze wel toe
     aanbevelingen: Joi.array().items(Joi.object()).optional(),
     cluster_suggesties: Joi.array().items(Joi.object()).optional()
-});
+}).unknown(true);
 
-// 2. Schema voor de Login
+// 2. Schema voor de Register
+const registerSchema = Joi.object({
+    naam: Joi.string().required().messages({
+        'any.required': 'Gebruikersnaam is verplicht'
+    }),
+    email: Joi.string().email().required().messages({
+        'string.email': 'Voer een geldig e-mailadres in',
+        'any.required': 'E-mail is verplicht'
+    }),
+    wachtwoord: Joi.string().min(6).required().messages({
+        'string.min': 'Wachtwoord moet minimaal 6 tekens bevatten',
+        'any.required': 'Wachtwoord is verplicht'
+    })
+}).unknown(true);
+
+// 3. Schema voor de Login
 const loginSchema = Joi.object({
     email: Joi.string().email().required().messages({
         'string.email': 'Voer een geldig e-mailadres in',
@@ -49,8 +64,24 @@ const loginSchema = Joi.object({
         'string.min': 'Wachtwoord moet minimaal 6 tekens bevatten',
         'any.required': 'Wachtwoord is verplicht'
     })
-});
+}).unknown(true);
+
+// 4. Schema voor het veranderen van credentials
+const changeCredentialsSchema = Joi.object({
+    currentPassword: Joi.string().required().messages({
+        'any.required': 'Huidig wachtwoord is verplicht'
+    }),
+    newEmail: Joi.string().email().optional().messages({
+        'string.email': 'Voer een geldig e-mailadres in'
+    }),
+    newPassword: Joi.string().min(6).optional().messages({
+        'string.min': 'Nieuw wachtwoord moet minimaal 6 tekens bevatten'
+    }),
+    newNaam: Joi.string().optional()
+}).unknown(true);
 
 // Middleware functies om te exporteren
 export const validateSurvey = (req: Request, res: Response, next: NextFunction) => validate(surveySchema, req, res, next);
+export const validateRegister = (req: Request, res: Response, next: NextFunction) => validate(registerSchema, req, res, next);
 export const validateLogin = (req: Request, res: Response, next: NextFunction) => validate(loginSchema, req, res, next);
+export const validateChangeCredentials = (req: Request, res: Response, next: NextFunction) => validate(changeCredentialsSchema, req, res, next);

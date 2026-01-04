@@ -31,6 +31,10 @@ app.get('/', (req, res) => {
   res.send('Jobbahub API is running...');
 });
 
+app.post('/test-register', (req, res) => {
+  res.json({ received: req.body });
+});
+
 app.use('/api/modules', moduleRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/favorites', favoriteRoutes);
