@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import express from 'express';
+import helmet from 'helmet';
 import mongoose from 'mongoose';
 import cors from 'cors'; // Vergeet niet: npm install cors & @types/cors
 import moduleRoutes from './routes/moduleRoutes.js';
@@ -8,6 +9,7 @@ import favoriteRoutes from './routes/favoriteRoutes.js';
 import aiRoutes from './routes/aiRoutes.js';
 
 const app = express();
+app.use(helmet());
 const port = process.env.PORT || 3000;
 
 // 1. Database Connectie
