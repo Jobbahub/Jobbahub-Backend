@@ -20,7 +20,7 @@ export const registerStudent = async (naam: string, email: string, wachtwoord: s
 // Update login functie om te zoeken op email
 export const loginStudent = async (email: string, wachtwoordInvoer: string) => {
   // 1. Zoek op EMAIL in plaats van NAAM
-  const student = await Student.findOne({ email });
+  const student = await Student.findOne({ email: { $eq: email } });
 
   if (!student) {
     throw new Error('Gebruiker niet gevonden met dit e-mailadres');
