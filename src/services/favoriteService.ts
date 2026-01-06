@@ -21,8 +21,8 @@ export const addFavorite = async (studentId: string, moduleId: string) => {
 export const removeFavorite = async (studentId: string, moduleId: string) => {
   // $pull verwijdert het item uit de array dat matcht
   const student = await Student.findByIdAndUpdate(
-    studentId,
-    { $pull: { favorieten: { module_id: moduleId } } },
+    { $eq: studentId },
+    { $pull: { favorieten: { module_id: { $eq: moduleId } } } },
     { new: true }
   );
 
