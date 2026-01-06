@@ -29,6 +29,15 @@ jobs:
           npm run build --if-present
           npm run test --if-present
 
+      # --- SNYK SECURITY SCAN (BACKEND) ---
+      - name: Snyk Security Scan
+        uses: snyk/actions/node@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --severity-threshold=high
+      # ------------------------------------
+
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
