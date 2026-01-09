@@ -48,10 +48,17 @@ const registerSchema = Joi.object({
         'string.email': 'Voer een geldig e-mailadres in',
         'any.required': 'E-mail is verplicht'
     }),
-    wachtwoord: Joi.string().min(6).required().messages({
-        'string.min': 'Wachtwoord moet minimaal 6 tekens bevatten',
-        'any.required': 'Wachtwoord is verplicht'
-    })
+    wachtwoord: Joi.string().required().min(12) 
+        .max(128)
+        .pattern(/[A-Z]/, 'hoofdletter')
+        .pattern(/[a-z]/, 'kleine letter')
+        .pattern(/[0-9]/, 'cijfer')
+        .optional()
+        .messages({
+            'string.min': 'Nieuw wachtwoord moet minimaal 12 tekens bevatten',
+            'string.max': 'Wachtwoord is te lang (maximaal 128 tekens)',
+            'string.pattern.name': 'Nieuw wachtwoord moet minimaal één {#name} bevatten'
+        }),
 }).unknown(true);
 
 // 3. Schema voor de Login
@@ -60,23 +67,46 @@ const loginSchema = Joi.object({
         'string.email': 'Voer een geldig e-mailadres in',
         'any.required': 'E-mail is verplicht'
     }),
-    wachtwoord: Joi.string().min(6).required().messages({
-        'string.min': 'Wachtwoord moet minimaal 6 tekens bevatten',
-        'any.required': 'Wachtwoord is verplicht'
-    })
+    wachtwoord: Joi.string().required().min(12) 
+        .max(128)
+        .pattern(/[A-Z]/, 'hoofdletter')
+        .pattern(/[a-z]/, 'kleine letter')
+        .pattern(/[0-9]/, 'cijfer')
+        .optional()
+        .messages({
+            'string.min': 'Nieuw wachtwoord moet minimaal 12 tekens bevatten',
+            'string.max': 'Wachtwoord is te lang (maximaal 128 tekens)',
+            'string.pattern.name': 'Nieuw wachtwoord moet minimaal één {#name} bevatten'
+        }),
 }).unknown(true);
 
 // 4. Schema voor het veranderen van credentials
 const changeCredentialsSchema = Joi.object({
-    currentPassword: Joi.string().required().messages({
-        'any.required': 'Huidig wachtwoord is verplicht'
-    }),
+    currentPassword: Joi.string().required().min(12) 
+        .max(128)
+        .pattern(/[A-Z]/, 'hoofdletter')
+        .pattern(/[a-z]/, 'kleine letter')
+        .pattern(/[0-9]/, 'cijfer')
+        .optional()
+        .messages({
+            'string.min': 'Nieuw wachtwoord moet minimaal 12 tekens bevatten',
+            'string.max': 'Wachtwoord is te lang (maximaal 128 tekens)',
+            'string.pattern.name': 'Nieuw wachtwoord moet minimaal één {#name} bevatten'
+        }),
     newEmail: Joi.string().email().optional().messages({
         'string.email': 'Voer een geldig e-mailadres in'
     }),
-    newPassword: Joi.string().min(6).optional().messages({
-        'string.min': 'Nieuw wachtwoord moet minimaal 6 tekens bevatten'
-    }),
+    newPassword: Joi.string().optional().min(12) 
+        .max(128)
+        .pattern(/[A-Z]/, 'hoofdletter')
+        .pattern(/[a-z]/, 'kleine letter')
+        .pattern(/[0-9]/, 'cijfer')
+        .optional()
+        .messages({
+            'string.min': 'Nieuw wachtwoord moet minimaal 12 tekens bevatten',
+            'string.max': 'Wachtwoord is te lang (maximaal 128 tekens)',
+            'string.pattern.name': 'Nieuw wachtwoord moet minimaal één {#name} bevatten'
+        }),
     newNaam: Joi.string().optional()
 }).unknown(true);
 

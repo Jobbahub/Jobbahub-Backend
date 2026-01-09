@@ -18,28 +18,3 @@ export const verifyToken = (req: Request, res: Response, next: NextFunction) => 
     res.status(400).json({ error: "Ongeldige token." });
   }
 };
-
-export const validatePassword = (password: string) => {
-  if (!password || typeof password !== 'string') {
-    return "Wachtwoord is verplicht.";
-  }
-  
-  if (password.length < 12) {
-    return "Wachtwoord moet minimaal 12 tekens lang zijn.";
-  }
-
-  if (password.length > 128) { 
-    return "Wachtwoord mag niet langer zijn dan 128 tekens.";
-  }
-
-  const hasUpperCase = /[A-Z]/.test(password);
-  const hasLowerCase = /[a-z]/.test(password);
-  const hasNumbers = /\d/.test(password);
-  const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(password);
-  
-  if (!(hasUpperCase && hasLowerCase && (hasNumbers || hasSpecial))) {
-    return "Wachtwoord moet een combinatie van hoofdletters, kleine letters en cijfers of symbolen bevatten.";
-  }
-
-  return "Wachtwoord is juist.";
-};

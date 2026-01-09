@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import * as authService from '../services/authService.js';
-import { validatePassword } from '../middleware/authMiddleware.js';
 
 export const register = async (req: Request, res: Response) => {
   try {
@@ -8,11 +7,6 @@ export const register = async (req: Request, res: Response) => {
     const { naam, email, wachtwoord } = req.body;
 
     if (!email) return res.status(400).json({ error: "Email is verplicht" });
-
-    const validationError = validatePassword(wachtwoord);
-    if (validationError) {
-      return res.status(400).json({ error: validationError });
-    }
 
     await authService.registerStudent(naam, email, wachtwoord);
     res.status(201).json({ message: "Student geregistreerd" });
@@ -25,11 +19,6 @@ export const login = async (req: Request, res: Response) => {
   try {
     // FIX: De frontend stuurt 'email' en 'password', dus dat lezen we hier uit
     const { email, wachtwoord } = req.body;
-
-    const validationError = validatePassword(wachtwoord);
-    if (validationError) {
-      return res.status(400).json({ error: validationError });
-    }
 
     // We geven dit door aan de service (die passen we in Stap 2 aan)
     const { student, token } = await authService.loginStudent(email, wachtwoord);
@@ -107,11 +96,6 @@ export const changeCredentials = async (req: Request, res: Response) => {
       return res.status(400).json({ 
         error: "Huidig wachtwoord is verplicht" 
       });
-    }
-
-    const validationError = validatePassword(newPassword);
-    if (validationError) {
-      return res.status(400).json({ error: validationError });
     }
 
     // Call the service to update credentials
