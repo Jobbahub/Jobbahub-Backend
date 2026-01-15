@@ -36,7 +36,7 @@ export const loginStudent = async (email: string, wachtwoordInvoer: string) => {
   const token = jwt.sign(
     { id: student._id, email: student.email },
     process.env.JWT_SECRET as string,
-    { expiresIn: '24h' }
+    { expiresIn: '1h' }
   );
 
   return { student, token };
