@@ -6,6 +6,8 @@ export interface IStudent extends Document {
   email: string;
   wachtwoord: string;
   favorieten: any[];
+  loginAttempts: number;
+  lockUntil: number;
   vragenlijst_resultaten?: {
     antwoorden: any;           // De ruwe data van de vragenlijst
     aanbevelingen?: {
@@ -27,6 +29,8 @@ const StudentSchema: Schema = new Schema({
   naam: { type: String, required: true, unique: true },
   email: { type: String, required: true, unique: true, lowercase: true },
   wachtwoord: { type: String, required: true },
+  loginAttempts: { type: Number, required: true, default: 0 },
+  lockUntil: { type: Number, required: true, default: 0 },
   favorieten: [{
     module_id: { type: String, required: true },
     toegevoegd_op: { type: Date, default: Date.now }

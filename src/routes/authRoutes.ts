@@ -3,10 +3,12 @@ import { validateLogin, validateSurvey, validateRegister, validateChangeCredenti
 import * as authController from '../controllers/authController.js';
 import { verifyToken } from '../middleware/authMiddleware.js';
 
+import { loginRateLimiter } from '../middleware/rateLimiter.js';
+
 const router = express.Router();
 
 router.post('/register', validateRegister, authController.register);
-router.post('/login', validateLogin, authController.login);
+router.post('/login', loginRateLimiter, validateLogin, authController.login);
 
 // Voeg de /me route toe
 router.get('/me', verifyToken, authController.getMe);

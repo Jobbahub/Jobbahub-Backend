@@ -17,3 +17,14 @@ export const aiRateLimiter = rateLimit({
         return (req.ip || "unknown_ip").replace(/:/g, '_');
     }
 });
+// Rate limiter specifiek voor login (IP based)
+export const loginRateLimiter = rateLimit({
+    windowMs: 3 * 60 * 1000, // 3 minuten window
+    max: 3, // Max 3 login pogingen per IP per 3 minuten (extra beveiliging naast account lock)
+    message: {
+        message: "Te veel inlogpogingen vanaf dit IP adres. Probeer het over 3 minuten opnieuw."
+    },
+    standardHeaders: true,
+    legacyHeaders: false,
+    validate: false,
+});

@@ -26,10 +26,36 @@ export const loginStudent = async (email: string, wachtwoordInvoer: string) => {
     throw new Error('Gebruiker niet gevonden met dit e-mailadres');
   }
 
+  // CHECK: Is gebruiker geblokkeerd?
+  if (student.lockUntil && student.lockUntil > Date.now()) {
+    throw new Error('Account is tijdelijk geblokkeerd vanwege te veel inlogpogingen. Probeer het later opnieuw.');
+  }
+
   // 2. Check wachtwoord
   const isMatch = await bcrypt.compare(wachtwoordInvoer, student.wachtwoord);
+
   if (!isMatch) {
+    // FOUT wachtwoord:
+    // Verhoog pogingen
+    const attempts = (student.loginAttempts || 0) + 1;
+    let updateFields: any = { loginAttempts: attempts };
+
+    // Als > 3 pogingen (dus bij de 4e fout), block voor 15 minuten
+    if (attempts >= 3) {
+      updateFields.lockUntil = Date.now() + 15 * 60 * 1000; // 15 minuten
+    }
+
+    await Student.findByIdAndUpdate(student._id, { $set: updateFields });
+
     throw new Error('Wachtwoord onjuist');
+  }
+
+  // SUCCES:
+  // Reset attempts en lock
+  if (student.loginAttempts > 0 || student.lockUntil > 0) {
+    await Student.findByIdAndUpdate(student._id, {
+      $set: { loginAttempts: 0, lockUntil: 0 }
+    });
   }
 
   // 3. Genereer token
