@@ -21,6 +21,8 @@ export interface IStudent extends Document {
       waarom: string;
     }[];
   };
+  failedLoginAttempts: number;
+  lockUntil: Date | null;
 }
 
 const StudentSchema: Schema = new Schema({
@@ -45,7 +47,10 @@ const StudentSchema: Schema = new Schema({
       popularity_score: Number,
       waarom: String
     }]
-  }
+  },
+  failedLoginAttempts: { type: Number, default: 0 },
+  lockUntil: { type: Date, default: null }
+
 });
 
 const Student = mongoose.model<IStudent>('Student', StudentSchema);

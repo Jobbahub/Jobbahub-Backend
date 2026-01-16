@@ -26,10 +26,40 @@ export const loginStudent = async (email: string, wachtwoordInvoer: string) => {
     throw new Error('Gebruiker niet gevonden met dit e-mailadres');
   }
 
+  // CHECK: Is de gebruiker gelocked?
+  if (student.lockUntil && student.lockUntil > new Date()) {
+    const minutesLeft = Math.ceil((student.lockUntil.getTime() - Date.now()) / 60000);
+    throw new Error(`Account is tijdelijk geblokkeerd. Probeer het opnieuw over ${minutesLeft} minuten.`);
+  }
+
+  // Als lock verlopen is, resetten we de pogingen (optioneel, of we geven ze weer 3 pogingen)
+  if (student.lockUntil && student.lockUntil <= new Date()) {
+    student.failedLoginAttempts = 0;
+    student.lockUntil = null;
+    await student.save();
+  }
+
   // 2. Check wachtwoord
   const isMatch = await bcrypt.compare(wachtwoordInvoer, student.wachtwoord);
   if (!isMatch) {
+    // Fout wachtwoord -> increment attempts
+    student.failedLoginAttempts = (student.failedLoginAttempts || 0) + 1;
+
+    if (student.failedLoginAttempts >= 3) {
+      student.lockUntil = new Date(Date.now() + 1 * 60 * 1000); // 1 minuut cooldown
+      await student.save();
+      throw new Error('3 keer een fout wachtwoord ingevoerd. Je account is voor 1 minuut geblokkeerd.');
+    }
+
+    await student.save();
     throw new Error('Wachtwoord onjuist');
+  }
+
+  // Succesvolle inlog -> reset alles
+  if (student.failedLoginAttempts > 0 || student.lockUntil) {
+    student.failedLoginAttempts = 0;
+    student.lockUntil = null;
+    await student.save();
   }
 
   // 3. Genereer token
