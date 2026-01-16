@@ -67,10 +67,13 @@ export default function () {
 
     // 2. AI Recommendation Request
     const aiPayload = JSON.stringify({
-        // Custom payload based on what your AI model expects
-        student_id: loginRes.json().user.id,
-        context: "Load Testing",
-        timestamp: new Date().toISOString()
+        antwoorden: {
+            keuze_taal: "Nederlands",
+            keuze_locatie: "Eindhoven",
+            knoppen_input: {
+                q_interesse: { score: 1 }
+            }
+        }
     });
 
     const aiParams = {

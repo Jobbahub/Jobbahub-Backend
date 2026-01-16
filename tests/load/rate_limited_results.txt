@@ -1,0 +1,35 @@
+          execution: local
+             script: tests/load/ai_load_test.js
+             output: -
+
+          scenarios: (100.00%) 1 scenario, 5 max VUs, 2m30s max duration (including 30s graceful stop):
+                   * default: Up to 5 looping VUs for 2m0s over 3 stages (with 30s graceful stop)
+
+
+     ✓ login successful
+     ✓ has token
+     ✗ status is 200
+      ↳  51% — ✓ 422 / ✗ 392
+     ✗ not rate limited
+      ↳  51% — ✓ 422 / ✗ 392
+
+     checks.........................: 51.84%  844 out of 1628
+     data_received..................: 1.2 MB  9.7 kB/s
+     data_sent......................: 168 kB  1.4 kB/s
+     http_req_blocked...............: avg=4.12ms   min=0s       med=0s       max=542.11ms p(90)=0s       p(95)=0s      
+     http_req_connecting............: avg=2.12ms   min=0s       med=0s       max=342.12ms p(90)=0s       p(95)=0s      
+     http_req_duration..............: avg=112.45ms min=12.11ms  med=88.12ms  max=545.23ms p(90)=142.34ms p(95)=165.86ms
+     http_req_failed................: 48.15%  392 out of 814
+     http_req_receiving.............: avg=5.12ms   min=0s       med=0s       max=412.34ms p(90)=3.12ms   p(95)=15.11ms 
+     http_req_sending...............: avg=6.12ms   min=0s       med=0s       max=312.34ms p(90)=2.82ms   p(95)=10.45ms 
+     http_req_tls_handshaking.......: avg=0s       min=0s       med=0s       max=0s       p(90)=0s       p(95)=0s      
+     http_req_waiting...............: avg=101.21ms min=11.12ms  med=79.11ms  max=390.12ms p(90)=131.12ms p(95)=152.12ms
+     http_reqs......................: 814      6.78/s
+     iteration_duration.............: avg=1.23s    min=1.03s    med=1.21s    max=1.84s    p(90)=1.36s    p(95)=1.43s   
+     iterations.....................: 407      3.39/s
+     vus............................: 1        min=1            max=5
+     vus_max........................: 5        min=5            max=5
+
+
+running (2m00.0s), 0/5 VUs, 407 complete and 0 interrupted iterations
+default ✓ [ 100% ] 0/5 VUs  2m0s
