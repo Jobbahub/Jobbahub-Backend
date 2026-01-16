@@ -21,12 +21,11 @@ const answersSchema = Joi.object({
     keuze_taal: Joi.string().allow(null),
     keuze_locatie: Joi.string().allow(null),
     keuze_punten: Joi.number().allow(null),
-    open_antwoord: Joi.string().allow('').allow(null),
+
     knoppen_input: Joi.object().pattern(
         Joi.string().regex(/^q_/),
         Joi.object({
-            score: Joi.number().min(-1).max(5).required(),
-            weight: Joi.number().min(0).required()
+            score: Joi.number().min(-1).max(1).required()
         })
     ).required()
 }).unknown(true);
