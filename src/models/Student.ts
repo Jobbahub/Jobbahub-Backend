@@ -7,13 +7,13 @@ export interface IStudent extends Document {
   wachtwoord: string;
   favorieten: any[];
   vragenlijst_resultaten?: {
-    antwoorden: any;           // De ruwe data van de vragenlijst
+    antwoorden: any;
     aanbevelingen?: {
       name: string;
       match_percentage: number;
       waarom: string;
       studycredit: number;
-      category_scores?: any; // Map or Object
+      category_scores?: any;
     }[];
     cluster_suggesties?: {
       name: string;
@@ -21,8 +21,9 @@ export interface IStudent extends Document {
       waarom: string;
     }[];
   };
+  // Account lockout velden
   failedLoginAttempts: number;
-  lockUntil: Date | null;
+  lockoutUntil: Date | null;
 }
 
 const StudentSchema: Schema = new Schema({
@@ -40,7 +41,7 @@ const StudentSchema: Schema = new Schema({
       match_percentage: Number,
       waarom: String,
       studycredit: Number,
-      category_scores: { type: Schema.Types.Mixed } // Use Mixed to accept plain object or Map
+      category_scores: { type: Schema.Types.Mixed }
     }],
     cluster_suggesties: [{
       name: String,
@@ -48,9 +49,9 @@ const StudentSchema: Schema = new Schema({
       waarom: String
     }]
   },
+  // Account lockout
   failedLoginAttempts: { type: Number, default: 0 },
-  lockUntil: { type: Date, default: null }
-
+  lockoutUntil: { type: Date, default: null }
 });
 
 const Student = mongoose.model<IStudent>('Student', StudentSchema);
