@@ -1,73 +1,66 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import crypto from 'crypto';
 import Student, { IStudent } from '../models/Student.js';
 
-const MAX_FAILED_ATTEMPTS = 5;
-const LOCKOUT_DURATION_MS = 30 * 60 * 1000; // 30 minuten
-
+// Update register functie om email mee te nemen
 export const registerStudent = async (naam: string, email: string, wachtwoord: string): Promise<IStudent> => {
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(wachtwoord, salt);
 
   const nieuweStudent = new Student({
     naam,
-    email,
+    email, // Sla het emailadres op
     wachtwoord: hashedPassword,
-    favorieten: [],
-    failedLoginAttempts: 0,
-    lockoutUntil: null
+    favorieten: []
   });
 
   return await nieuweStudent.save();
 };
 
+// Update login functie om te zoeken op email
 export const loginStudent = async (email: string, wachtwoordInvoer: string) => {
+  // 1. Zoek op EMAIL in plaats van NAAM
   const student = await Student.findOne({ email: { $eq: email } });
 
   if (!student) {
     throw new Error('Gebruiker niet gevonden met dit e-mailadres');
   }
 
-  // Check lockout status
-  if (student.lockoutUntil && student.lockoutUntil > new Date()) {
-    const remainingMinutes = Math.ceil((student.lockoutUntil.getTime() - Date.now()) / 60000);
-    throw new Error(`Account tijdelijk vergrendeld. Probeer het over ${remainingMinutes} minuten opnieuw.`);
+  // CHECK: Is gebruiker geblokkeerd?
+  if (student.lockUntil && student.lockUntil > Date.now()) {
+    throw new Error('Account is tijdelijk geblokkeerd vanwege te veel inlogpogingen. Probeer het later opnieuw.');
   }
 
+  // 2. Check wachtwoord
   const isMatch = await bcrypt.compare(wachtwoordInvoer, student.wachtwoord);
-  
+
   if (!isMatch) {
-    const failedAttempts = (student.failedLoginAttempts || 0) + 1;
-    const updateData: any = { failedLoginAttempts: failedAttempts };
-    
-    if (failedAttempts >= MAX_FAILED_ATTEMPTS) {
-      updateData.lockoutUntil = new Date(Date.now() + LOCKOUT_DURATION_MS);
-      await Student.findByIdAndUpdate(student._id, updateData);
-      throw new Error(`Te veel mislukte pogingen. Account vergrendeld voor 30 minuten.`);
+    // FOUT wachtwoord:
+    // Verhoog pogingen
+    const attempts = (student.loginAttempts || 0) + 1;
+    let updateFields: any = { loginAttempts: attempts };
+
+    // Als > 3 pogingen (dus bij de 4e fout), block voor 15 minuten
+    if (attempts >= 3) {
+      updateFields.lockUntil = Date.now() + 15 * 60 * 1000; // 15 minuten
     }
-    
-    await Student.findByIdAndUpdate(student._id, updateData);
-    throw new Error(`Wachtwoord onjuist. Nog ${MAX_FAILED_ATTEMPTS - failedAttempts} pogingen over.`);
+
+    await Student.findByIdAndUpdate(student._id, { $set: updateFields });
+
+    throw new Error('Wachtwoord onjuist');
   }
 
-  // Reset failed attempts on successful login
-  if (student.failedLoginAttempts > 0 || student.lockoutUntil) {
+  // SUCCES:
+  // Reset attempts en lock
+  if (student.loginAttempts > 0 || student.lockUntil > 0) {
     await Student.findByIdAndUpdate(student._id, {
-      failedLoginAttempts: 0,
-      lockoutUntil: null
+      $set: { loginAttempts: 0, lockUntil: 0 }
     });
   }
 
-  // Generate token met uitgebreide claims
+  // 3. Genereer token
   const token = jwt.sign(
-    { 
-      id: student._id, 
-      email: student.email,
-      jti: crypto.randomUUID(),
-      iss: 'jobbahub-api',
-      aud: 'jobbahub-client'
-    },
+    { id: student._id, email: student.email },
     process.env.JWT_SECRET as string,
     { expiresIn: '1h' }
   );
@@ -91,6 +84,7 @@ export const getStudentById = async (studentId: string) => {
   return await Student.findById(studentId).select('-wachtwoord');
 };
 
+// NEW: Change credentials (email, password, naam)
 export const changeCredentials = async (
   studentId: string,
   currentPassword: string,
@@ -100,22 +94,27 @@ export const changeCredentials = async (
     newNaam?: string;
   }
 ): Promise<IStudent> => {
+  // 1. Find the student
   const student = await Student.findById(studentId);
   if (!student) {
     throw new Error('Gebruiker niet gevonden');
   }
 
+  // 2. Verify current password
   const isPasswordCorrect = await bcrypt.compare(currentPassword, student.wachtwoord);
   if (!isPasswordCorrect) {
     throw new Error('Huidig wachtwoord is onjuist');
   }
 
+  // 3. Prepare update object
   const updateData: any = {};
 
+  // Update email if provided
   if (updates.newEmail) {
+    // Check if new email is already in use
     const emailExists = await Student.findOne({
       email: updates.newEmail.toLowerCase(),
-      _id: { $ne: studentId }
+      _id: { $ne: studentId } // Exclude current student
     });
 
     if (emailExists) {
@@ -125,19 +124,24 @@ export const changeCredentials = async (
     updateData.email = updates.newEmail.toLowerCase();
   }
 
+  // Update password if provided
   if (updates.newPassword) {
-    if (updates.newPassword.length < 8) {
-      throw new Error('Nieuw wachtwoord moet minimaal 8 tekens lang zijn');
+    // Validate password strength (min 6 characters)
+    if (updates.newPassword.length < 6) {
+      throw new Error('Nieuw wachtwoord moet minimaal 6 tekens lang zijn');
     }
 
+    // Hash the new password
     const salt = await bcrypt.genSalt(10);
     updateData.wachtwoord = await bcrypt.hash(updates.newPassword, salt);
   }
 
+  // Update naam if provided
   if (updates.newNaam) {
+    // Check if new naam is already in use
     const naamExists = await Student.findOne({
       naam: updates.newNaam,
-      _id: { $ne: studentId }
+      _id: { $ne: studentId } // Exclude current student
     });
 
     if (naamExists) {
@@ -147,6 +151,7 @@ export const changeCredentials = async (
     updateData.naam = updates.newNaam;
   }
 
+  // 4. Update the student
   const updatedStudent = await Student.findByIdAndUpdate(
     studentId,
     updateData,

@@ -6,14 +6,16 @@ export interface IStudent extends Document {
   email: string;
   wachtwoord: string;
   favorieten: any[];
+  loginAttempts: number;
+  lockUntil: number;
   vragenlijst_resultaten?: {
-    antwoorden: any;
+    antwoorden: any;           // De ruwe data van de vragenlijst
     aanbevelingen?: {
       name: string;
       match_percentage: number;
       waarom: string;
       studycredit: number;
-      category_scores?: any;
+      category_scores?: any; // Map or Object
     }[];
     cluster_suggesties?: {
       name: string;
@@ -21,15 +23,14 @@ export interface IStudent extends Document {
       waarom: string;
     }[];
   };
-  // Account lockout velden
-  failedLoginAttempts: number;
-  lockoutUntil: Date | null;
 }
 
 const StudentSchema: Schema = new Schema({
   naam: { type: String, required: true, unique: true },
   email: { type: String, required: true, unique: true, lowercase: true },
   wachtwoord: { type: String, required: true },
+  loginAttempts: { type: Number, required: true, default: 0 },
+  lockUntil: { type: Number, required: true, default: 0 },
   favorieten: [{
     module_id: { type: String, required: true },
     toegevoegd_op: { type: Date, default: Date.now }
@@ -41,17 +42,14 @@ const StudentSchema: Schema = new Schema({
       match_percentage: Number,
       waarom: String,
       studycredit: Number,
-      category_scores: { type: Schema.Types.Mixed }
+      category_scores: { type: Schema.Types.Mixed } // Use Mixed to accept plain object or Map
     }],
     cluster_suggesties: [{
       name: String,
       popularity_score: Number,
       waarom: String
     }]
-  },
-  // Account lockout
-  failedLoginAttempts: { type: Number, default: 0 },
-  lockoutUntil: { type: Date, default: null }
+  }
 });
 
 const Student = mongoose.model<IStudent>('Student', StudentSchema);

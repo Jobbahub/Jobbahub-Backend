@@ -1,7 +1,8 @@
+// src/middleware/validationMiddleware.ts
 import { Request, Response, NextFunction } from 'express';
 import Joi from 'joi';
-import mongoose from 'mongoose';
 
+// Helper om Joi validatie uit te voeren
 const validate = (schema: Joi.ObjectSchema, req: Request, res: Response, next: NextFunction) => {
     const { error } = schema.validate(req.body, { abortEarly: false });
     if (error) {
@@ -14,8 +15,8 @@ const validate = (schema: Joi.ObjectSchema, req: Request, res: Response, next: N
     next();
 };
 
-const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-
+// 1. Schema voor de Vragenlijst
+// 1. Schema voor de Vragenlijst antwoorden (nested object)
 const answersSchema = Joi.object({
     keuze_taal: Joi.string().allow(null),
     keuze_locatie: Joi.string().allow(null),
@@ -29,44 +30,42 @@ const answersSchema = Joi.object({
     ).required()
 }).unknown(true);
 
+// Schema voor de volledige payload (inclusief aanbevelingen etc.)
 const surveySchema = Joi.object({
     antwoorden: answersSchema.required(),
+    // We valideren aanbevelingen en clusters niet strikt, maar we staan ze wel toe
     aanbevelingen: Joi.array().items(Joi.object()).optional(),
     cluster_suggesties: Joi.array().items(Joi.object()).optional()
 }).unknown(true);
 
+// 2. Schema voor de Register
 const registerSchema = Joi.object({
-    naam: Joi.string().min(2).max(50).required().messages({
-        'string.min': 'Gebruikersnaam moet minimaal 2 tekens bevatten',
-        'string.max': 'Gebruikersnaam mag maximaal 50 tekens bevatten',
+    naam: Joi.string().required().messages({
         'any.required': 'Gebruikersnaam is verplicht'
     }),
     email: Joi.string().email().required().messages({
         'string.email': 'Voer een geldig e-mailadres in',
         'any.required': 'E-mail is verplicht'
     }),
-    wachtwoord: Joi.string()
-        .min(8)
-        .pattern(strongPasswordRegex)
-        .required()
-        .messages({
-            'string.min': 'Wachtwoord moet minimaal 8 tekens bevatten',
-            'string.pattern.base': 'Wachtwoord moet minimaal 1 hoofdletter, 1 kleine letter, 1 cijfer en 1 speciaal teken (@$!%*?&) bevatten',
-            'any.required': 'Wachtwoord is verplicht'
-        })
-});
+    wachtwoord: Joi.string().min(6).required().messages({
+        'string.min': 'Wachtwoord moet minimaal 6 tekens bevatten',
+        'any.required': 'Wachtwoord is verplicht'
+    })
+}).unknown(true);
 
+// 3. Schema voor de Login
 const loginSchema = Joi.object({
     email: Joi.string().email().required().messages({
         'string.email': 'Voer een geldig e-mailadres in',
         'any.required': 'E-mail is verplicht'
     }),
-    wachtwoord: Joi.string().min(8).required().messages({
-        'string.min': 'Wachtwoord moet minimaal 8 tekens bevatten',
+    wachtwoord: Joi.string().min(6).required().messages({
+        'string.min': 'Wachtwoord moet minimaal 6 tekens bevatten',
         'any.required': 'Wachtwoord is verplicht'
     })
-});
+}).unknown(true);
 
+// 4. Schema voor het veranderen van credentials
 const changeCredentialsSchema = Joi.object({
     currentPassword: Joi.string().required().messages({
         'any.required': 'Huidig wachtwoord is verplicht'
@@ -74,99 +73,13 @@ const changeCredentialsSchema = Joi.object({
     newEmail: Joi.string().email().optional().messages({
         'string.email': 'Voer een geldig e-mailadres in'
     }),
-    newPassword: Joi.string()
-        .min(8)
-        .pattern(strongPasswordRegex)
-        .optional()
-        .messages({
-            'string.min': 'Nieuw wachtwoord moet minimaal 8 tekens bevatten',
-            'string.pattern.base': 'Wachtwoord moet minimaal 1 hoofdletter, 1 kleine letter, 1 cijfer en 1 speciaal teken bevatten'
-        }),
-    newNaam: Joi.string().min(2).max(50).optional()
-});
+    newPassword: Joi.string().min(6).optional().messages({
+        'string.min': 'Nieuw wachtwoord moet minimaal 6 tekens bevatten'
+    }),
+    newNaam: Joi.string().optional()
+}).unknown(true);
 
-export const validateObjectId = (paramName: string = 'id') => {
-    return (req: Request, res: Response, next: NextFunction) => {
-        const id = req.params[paramName];
-        if (!id || !mongoose.Types.ObjectId.isValid(id)) {
-            return res.status(400).json({
-                status: 'error',
-                message: 'Ongeldig ID formaat',
-                details: [`${paramName} moet een geldig ID zijn`]
-            });
-        }
-        next();
-    };
-};
-
-const batchIdsSchema = Joi.object({
-    ids: Joi.string().required().custom((value, helpers) => {
-        const ids = value.split(',');
-        for (const id of ids) {
-            if (!mongoose.Types.ObjectId.isValid(id.trim())) {
-                return helpers.error('any.invalid');
-            }
-        }
-        return value;
-    }).messages({
-        'any.required': 'IDs parameter is verplicht',
-        'any.invalid': 'Een of meer IDs zijn ongeldig'
-    })
-});
-
-export const validateBatchIds = (req: Request, res: Response, next: NextFunction) => {
-    const { error } = batchIdsSchema.validate({ ids: req.query.ids });
-    if (error) {
-        return res.status(400).json({
-            status: 'error',
-            message: 'Validatiefout',
-            details: error.details.map(d => d.message)
-        });
-    }
-    next();
-};
-
-const addFavoriteSchema = Joi.object({
-    moduleId: Joi.string().required().custom((value, helpers) => {
-        if (!mongoose.Types.ObjectId.isValid(value)) {
-            return helpers.error('any.invalid');
-        }
-        return value;
-    }).messages({
-        'any.required': 'moduleId is verplicht',
-        'any.invalid': 'moduleId moet een geldig ID zijn'
-    })
-});
-
-export const validateAddFavorite = (req: Request, res: Response, next: NextFunction) => {
-    const { error } = addFavoriteSchema.validate(req.body);
-    if (error) {
-        return res.status(400).json({
-            status: 'error',
-            message: 'Validatiefout',
-            details: error.details.map(d => d.message)
-        });
-    }
-    next();
-};
-
-const aiRecommendSchema = Joi.object({
-    antwoorden: Joi.object().required(),
-    preferences: Joi.object().optional()
-});
-
-export const validateAIRequest = (req: Request, res: Response, next: NextFunction) => {
-    const { error } = aiRecommendSchema.validate(req.body);
-    if (error) {
-        return res.status(400).json({
-            status: 'error',
-            message: 'Ongeldige AI request',
-            details: error.details.map(d => d.message)
-        });
-    }
-    next();
-};
-
+// Middleware functies om te exporteren
 export const validateSurvey = (req: Request, res: Response, next: NextFunction) => validate(surveySchema, req, res, next);
 export const validateRegister = (req: Request, res: Response, next: NextFunction) => validate(registerSchema, req, res, next);
 export const validateLogin = (req: Request, res: Response, next: NextFunction) => validate(loginSchema, req, res, next);
