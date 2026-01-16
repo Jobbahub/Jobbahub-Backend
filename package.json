@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "test": "node --no-warnings --experimental-vm-modules node_modules/jest/bin/jest.js",
     "build": "tsc -p tsconfig.build.json",
     "start": "node dist/Server.js",
     "dev": "npm run build && npm run start"

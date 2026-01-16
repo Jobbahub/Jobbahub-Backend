@@ -18,10 +18,15 @@ describe('AuthService', () => {
         });
 
         test('geeft een error bij een foutief wachtwoord', async () => {
-            jest.spyOn(Student, 'findOne').mockResolvedValue({
+            const mockStudent = {
                 email: 'test@test.com',
-                wachtwoord: 'gehashed'
-            } as any);
+                wachtwoord: 'gehashed',
+                failedLoginAttempts: 0,
+                lockUntil: null,
+                save: jest.fn().mockImplementation(function () { return Promise.resolve(this); })
+            };
+
+            jest.spyOn(Student, 'findOne').mockResolvedValue(mockStudent as any);
 
             jest.spyOn(bcrypt, 'compare').mockImplementation(() => Promise.resolve(false));
 
@@ -29,7 +34,14 @@ describe('AuthService', () => {
         });
 
         test('geeft een student en token terug bij geldige login', async () => {
-            const mockStudent = { _id: '123', email: 'test@test.com', wachtwoord: 'gehashed' };
+            const mockStudent = {
+                _id: '123',
+                email: 'test@test.com',
+                wachtwoord: 'gehashed',
+                failedLoginAttempts: 0,
+                lockUntil: null,
+                save: jest.fn().mockImplementation(function () { return Promise.resolve(this); })
+            };
             jest.spyOn(Student, 'findOne').mockResolvedValue(mockStudent as any);
             jest.spyOn(bcrypt, 'compare').mockImplementation(() => Promise.resolve(true));
             jest.spyOn(jwt, 'sign').mockReturnValue('mocked-token' as any);
