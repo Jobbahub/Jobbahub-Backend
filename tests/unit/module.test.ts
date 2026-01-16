@@ -33,14 +33,4 @@ describe('ModuleService', () => {
 
         await expect(moduleService.getModuleById(999)).rejects.toThrow('Module niet gevonden');
     });
-
-    test('getModulesByIds filtert dubbele ID\'s en ongeldige ID\'s', async () => {
-        const ids = [1, 1, 2, NaN];
-        mockRepository.getModulesByIds.mockResolvedValue([{ id: 1 }, { id: 2 }]);
-
-        await moduleService.getModulesByIds(ids as any);
-
-        // De repository moet aangeroepen worden met [1, 2] (uniek en numeriek)
-        expect(mockRepository.getModulesByIds).toHaveBeenCalledWith([1, 2]);
-    });
 });

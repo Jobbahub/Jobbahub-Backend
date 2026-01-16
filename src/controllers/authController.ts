@@ -35,7 +35,11 @@ export const login = async (req: Request, res: Response) => {
     });
   } catch (error: any) {
     console.error("Login fout:", error);
-    res.status(401).json({ error: error.message || "Inloggen mislukt" });
+    let statusCode = 401;
+    if (error.message && error.message.includes('geblokkeerd')) {
+      statusCode = 429;
+    }
+    res.status(statusCode).json({ error: error.message || "Inloggen mislukt" });
   }
 };
 
@@ -86,15 +90,15 @@ export const changeCredentials = async (req: Request, res: Response) => {
 
     // Verify that at least one field is being updated
     if (!newEmail && !newPassword && !newNaam) {
-      return res.status(400).json({ 
-        error: "Je moet minstens één veld opgeven om te wijzigen (newEmail, newPassword, of newNaam)" 
+      return res.status(400).json({
+        error: "Je moet minstens één veld opgeven om te wijzigen (newEmail, newPassword, of newNaam)"
       });
     }
 
     // Current password is always required
     if (!currentPassword) {
-      return res.status(400).json({ 
-        error: "Huidig wachtwoord is verplicht" 
+      return res.status(400).json({
+        error: "Huidig wachtwoord is verplicht"
       });
     }
 
