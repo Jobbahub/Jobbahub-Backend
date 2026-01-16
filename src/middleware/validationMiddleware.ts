@@ -25,7 +25,7 @@ const answersSchema = Joi.object({
     knoppen_input: Joi.object().pattern(
         Joi.string().regex(/^q_/),
         Joi.object({
-            score: Joi.number().min(-1).max(5).required()
+            score: Joi.number().min(-1).max(1).required()
         })
     ).required()
 }).unknown(true);
