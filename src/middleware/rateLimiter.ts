@@ -20,9 +20,9 @@ export const aiRateLimiter = rateLimit({
 // Rate limiter specifiek voor login (IP based)
 export const loginRateLimiter = rateLimit({
     windowMs: 3 * 60 * 1000, // 3 minuten window
-    max: 3, // Max 3 login pogingen per IP per 3 minuten (extra beveiliging naast account lock)
+    max: 3, // Max 3 login pogingen per IP per 3 minuten
     message: {
-        message: "Te veel inlogpogingen vanaf dit IP adres. Probeer het over 3 minuten opnieuw."
+        message: "Te veel inlogpogingen vanaf dit IP adres. Probeer het later opnieuw."
     },
     standardHeaders: true,
     legacyHeaders: false,

@@ -23,7 +23,7 @@ export const loginStudent = async (email: string, wachtwoordInvoer: string) => {
   const student = await Student.findOne({ email: { $eq: email } });
 
   if (!student) {
-    throw new Error('Gebruiker niet gevonden met dit e-mailadres');
+    throw new Error('Wachtwoord verkeerd voor deze email');
   }
 
   // CHECK: Is gebruiker geblokkeerd?
@@ -40,14 +40,14 @@ export const loginStudent = async (email: string, wachtwoordInvoer: string) => {
     const attempts = (student.loginAttempts || 0) + 1;
     let updateFields: any = { loginAttempts: attempts };
 
-    // Als > 3 pogingen (dus bij de 4e fout), block voor 15 minuten
+    // Als > 3 pogingen (dus bij de 4e fout), block voor 3 minuten
     if (attempts >= 3) {
-      updateFields.lockUntil = Date.now() + 15 * 60 * 1000; // 15 minuten
+      updateFields.lockUntil = Date.now() + 3 * 60 * 1000; // 3 minuten
     }
 
     await Student.findByIdAndUpdate(student._id, { $set: updateFields });
 
-    throw new Error('Wachtwoord onjuist');
+    throw new Error('Wachtwoord verkeerd voor deze email');
   }
 
   // SUCCES:
