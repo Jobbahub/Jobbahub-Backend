@@ -23,7 +23,7 @@ export const loginStudent = async (email: string, wachtwoordInvoer: string) => {
   const student = await Student.findOne({ email: { $eq: email } });
 
   if (!student) {
-    throw new Error('Wachtwoord verkeerd voor deze email');
+    throw new Error('Gebruiker niet gevonden met dit e-mailadres');
   }
 
   // CHECK: Is gebruiker geblokkeerd?
@@ -47,7 +47,7 @@ export const loginStudent = async (email: string, wachtwoordInvoer: string) => {
 
     await Student.findByIdAndUpdate(student._id, { $set: updateFields });
 
-    throw new Error('Wachtwoord verkeerd voor deze email');
+    throw new Error('Wachtwoord onjuist');
   }
 
   // SUCCES:
